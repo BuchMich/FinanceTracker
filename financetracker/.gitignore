@@ -1,0 +1,85 @@
+# =========================
+# Miscellaneous
+# =========================
+*.class
+*.log
+*.pyc
+*.swp
+*.tmp
+.DS_Store
+Thumbs.db
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# =========================
+# IntelliJ / Android Studio
+# =========================
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+*.code-workspace
+
+# =========================
+# Flutter / Dart / Pub
+# =========================
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# =========================
+# Android
+# =========================
+android/.gradle/
+android/local.properties
+android/key.properties
+*.jks
+*.keystore
+
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# =========================
+# iOS
+# =========================
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/ephemeral/
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/xcuserdata/
+
+# =========================
+# macOS / Windows / Linux
+# =========================
+macos/Pods/
+macos/Flutter/ephemeral/
+windows/flutter/ephemeral/
+linux/flutter/ephemeral/
+
+# =========================
+# Web
+# =========================
+build/web/
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
