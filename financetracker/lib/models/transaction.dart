@@ -1,46 +1,35 @@
 class Transaction {
+  final String? id;
   final String title;
   final double amount;
   final DateTime date;
   final String category;
 
   const Transaction({
+    this.id,
     required this.title,
     required this.amount,
     required this.date,
     required this.category,
   });
-}
 
-final List<Transaction> demoTransactions = [
-  Transaction(
-    title: 'Supermarkt',
-    amount: -54.30,
-    date: DateTime(2026, 1, 30),
-    category: 'Essen',
-  ),
-  Transaction(
-    title: 'Gehalt',
-    amount: 2100.00,
-    date: DateTime(2026, 1, 28),
-    category: 'Einkommen',
-  ),
-  Transaction(
-    title: 'Miete',
-    amount: -750.00,
-    date: DateTime(2026, 2, 1),
-    category: 'Wohnen',
-  ),
-  Transaction(
-    title: 'Streaming',
-    amount: -14.99,
-    date: DateTime(2026, 1, 25),
-    category: 'Freizeit',
-  ),
-  Transaction(
-    title: 'Freelance',
-    amount: 450.00,
-    date: DateTime(2026, 1, 20),
-    category: 'Einkommen',
-  ),
-];
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      id: json['id'] as String?,
+      title: json['title'] as String,
+      amount: (json['amount'] as num).toDouble(),
+      date: DateTime.parse(json['date'] as String),
+      category: json['category'] as String,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (id != null) 'id': id,
+      'title': title,
+      'amount': amount,
+      'date': date.toIso8601String().split('T').first,
+      'category': category,
+    };
+  }
+}
