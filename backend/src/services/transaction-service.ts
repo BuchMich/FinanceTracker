@@ -1,70 +1,41 @@
 import { Transaction } from '../models/transaction';
-import { v4 as uuidv4 } from 'uuid';
+import { dbAll, dbGet, dbRun } from '../database';
 
 export class TransactionService {
-    private transactions: Transaction[] = [
-        {
-            id: uuidv4(),
-            title: 'Supermarkt',
-            amount: -54.30,
-            date: '2026-01-30',
-            category: 'Essen',
-        },
-        {
-            id: uuidv4(),
-            title: 'Gehalt',
-            amount: 2100.00,
-            date: '2026-01-28',
-            category: 'Einkommen',
-        },
-        {
-            id: uuidv4(),
-            title: 'Miete',
-            amount: -750.00,
-            date: '2026-02-01',
-            category: 'Wohnen',
-        },
-        {
-            id: uuidv4(),
-            title: 'Streaming',
-            amount: -14.99,
-            date: '2026-01-25',
-            category: 'Freizeit',
-        },
-        {
-            id: uuidv4(),
-            title: 'Freelance',
-            amount: 450.00,
-            date: '2026-01-20',
-            category: 'Einkommen',
-        },
-    ];
 
-    getAllTransactions(): Transaction[] {
-        return this.transactions;
+    async getAllTransactions(): Promise<Transaction[]> {
+        return dbAll<Transaction>('SELECT * FROM transactions ORDER BY date DESC');
     }
 
-    getTransactionById(id: string): Transaction | undefined {
-        return this.transactions.find((t) => t.id === id);
+    async getTransactionById(id: string): Promise<Transaction | undefined> {
+        return dbGet<Transaction>('SELECT * FROM transactions WHERE id = ?', [id]);
     }
 
-    addTransaction(data: Omit<Transaction, 'id'>): Transaction {
-        const transaction: Transaction = { id: uuidv4(), ...data };
-        this.transactions.push(transaction);
-        return transaction;
+    async addTransaction(data: Omit<Transaction, 'id'>): Promise<Transaction> {
+        const result = await dbRun(
+            'INSERT INTO transactions (title, amount, type, category, date) VALUES (?, ?, ?, ?, ?)',
+            [data.title, data.amount, data.type, data.category, data.date]
+        );
+        return (await this.getTransactionById(result.lastID.toString()))!;
     }
 
-    updateTransaction(id: string, data: Partial<Omit<Transaction, 'id'>>): Transaction | undefined {
-        const index = this.transactions.findIndex((t) => t.id === id);
-        if (index === -1) return undefined;
-        this.transactions[index] = { ...this.transactions[index], ...data };
-        return this.transactions[index];
+    async updateTransaction(id: string, data: Partial<Omit<Transaction, 'id'>>): Promise<Transaction | undefined> {
+        const existing = await this.getTransactionById(id);
+        if (!existing) return undefined;
+
+        const updated = { ...existing, ...data };
+        await dbRun(
+            'UPDATE transactions SET title = ?, amount = ?, type = ?, category = ?, date = ? WHERE id = ?',
+            [updated.title, updated.amount, updated.type, updated.category, updated.date, id]
+        );
+        return this.getTransactionById(id);
     }
 
-    deleteTransaction(id: string): Transaction | undefined {
-        const index = this.transactions.findIndex((t) => t.id === id);
-        if (index === -1) return undefined;
-        const [removed] = this.transactions.splice(index, 1);
-        return removed;
+    async deleteTransaction(id: string): Promise<Transaction | undefined> {
+        const existing = await this.getTransactionById(id);
+        if (!existing) return undefined;
+
+        await dbRun('DELETE FROM transactions WHERE id = ?', [id]);
+        return existing;
     }
 }
