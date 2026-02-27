@@ -108,8 +108,16 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                   ButtonSegment(value: false, label: Text('Einnahme')),
                 ],
                 selected: {_isExpense},
-                onSelectionChanged: (val) =>
-                    setState(() => _isExpense = val.first),
+                onSelectionChanged: (val) {
+                  setState(() {
+                    _isExpense = val.first;
+                    if (!_isExpense) {
+                      _selectedCategory = 'Einkommen';
+                    } else if (_selectedCategory == 'Einkommen') {
+                      _selectedCategory = 'Essen';
+                    }
+                  });
+                },
               ),
               const SizedBox(height: 16),
 
@@ -146,20 +154,23 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
               ),
               const SizedBox(height: 16),
 
-              DropdownButtonFormField<String>(
-                value: _selectedCategory,
-                decoration: const InputDecoration(
-                  labelText: 'Kategorie',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.category),
+              if (_isExpense) ...[
+                DropdownButtonFormField<String>(
+                  value: _selectedCategory,
+                  decoration: const InputDecoration(
+                    labelText: 'Kategorie',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.category),
+                  ),
+                  items: categories
+                      .where((c) => c != 'Einkommen')
+                      .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                      .toList(),
+                  onChanged: (v) =>
+                      setState(() => _selectedCategory = v ?? 'Essen'),
                 ),
-                items: categories
-                    .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                    .toList(),
-                onChanged: (v) =>
-                    setState(() => _selectedCategory = v ?? 'Essen'),
-              ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
+              ],
 
               ListTile(
                 contentPadding: EdgeInsets.zero,
