@@ -105,7 +105,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   final transactions = snapshot.data!;
                   final saldo = transactions.fold<double>(
                     0,
-                    (sum, t) => sum + t.amount,
+                    (sum, t) => sum + t.signedAmount,
                   );
 
                   return Column(
@@ -150,9 +150,9 @@ class _DashboardPageState extends State<DashboardPage> {
                           separatorBuilder: (_, __) => const Divider(height: 1),
                           itemBuilder: (context, index) {
                             final t = transactions[index];
-                            final isPositive = t.amount >= 0;
+                            final isPositive = t.isIncome;
                             return Dismissible(
-                              key: Key(t.id ?? index.toString()),
+                              key: Key(t.id?.toString() ?? index.toString()),
                               direction: DismissDirection.endToStart,
                               background: Container(
                                 alignment: Alignment.centerRight,
@@ -176,7 +176,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: Text(t.title),
                                 subtitle: Text(dateFormat.format(t.date)),
                                 trailing: Text(
-                                  '${isPositive ? '+' : ''}${currencyFormat.format(t.amount)}',
+                                  '${isPositive ? '+' : '-'}${currencyFormat.format(t.amount)}',
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     color: isPositive
                                         ? Colors.green

@@ -39,7 +39,7 @@ class ApiService {
     throw Exception('Fehler beim Aktualisieren der Transaktion');
   }
 
-  static Future<void> deleteTransaction(String id) async {
+  static Future<void> deleteTransaction(int id) async {
     final response = await http.delete(Uri.parse('$baseUrl/transactions/$id'));
     if (response.statusCode != 200) {
       throw Exception('Fehler beim Löschen der Transaktion');

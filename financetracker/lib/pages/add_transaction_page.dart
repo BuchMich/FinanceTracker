@@ -55,7 +55,8 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     final amount = double.parse(_amountController.text.replaceAll(',', '.'));
     final transaction = Transaction(
       title: _titleController.text.trim(),
-      amount: _isExpense ? -amount.abs() : amount.abs(),
+      amount: amount.abs(),
+      type: _isExpense ? 'expense' : 'income',
       date: _selectedDate,
       category: _selectedCategory,
     );
