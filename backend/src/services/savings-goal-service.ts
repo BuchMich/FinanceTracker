@@ -38,4 +38,8 @@ export class SavingsGoalService {
         await dbRun('DELETE FROM savings_goals WHERE id = ?', [id]);
         return existing;
     }
+
+    async deleteAllGoals(): Promise<void> {
+        await dbRun('DELETE FROM savings_goals');
+    }
 }

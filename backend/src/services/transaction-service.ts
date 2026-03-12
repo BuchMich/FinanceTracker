@@ -38,4 +38,8 @@ export class TransactionService {
         await dbRun('DELETE FROM transactions WHERE id = ?', [id]);
         return existing;
     }
+
+    async deleteAllTransactions(): Promise<void> {
+        await dbRun('DELETE FROM transactions');
+    }
 }

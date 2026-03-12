@@ -101,6 +101,18 @@ app.delete('/savings-goals/:id', async (req: Request, res: Response) => {
     res.send(goal);
 });
 
+// DELETE alle Transaktionen
+app.delete('/transactions', async (req: Request, res: Response) => {
+    await transactionService.deleteAllTransactions();
+    res.send({ message: 'Alle Transaktionen gelöscht' });
+});
+
+// DELETE alle Sparziele
+app.delete('/savings-goals', async (req: Request, res: Response) => {
+    await savingsGoalService.deleteAllGoals();
+    res.send({ message: 'Alle Sparziele gelöscht' });
+});
+
 // Datenbank initialisieren, dann Server starten
 initDatabase().then(() => {
     app.listen(port, () => {

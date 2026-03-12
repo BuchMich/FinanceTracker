@@ -88,4 +88,18 @@ class ApiService {
       throw Exception('Fehler beim Löschen des Sparziels');
     }
   }
+
+  static Future<void> deleteAllTransactions() async {
+    final response = await http.delete(Uri.parse('$baseUrl/transactions'));
+    if (response.statusCode != 200) {
+      throw Exception('Fehler beim Löschen aller Transaktionen');
+    }
+  }
+
+  static Future<void> deleteAllSavingsGoals() async {
+    final response = await http.delete(Uri.parse('$baseUrl/savings-goals'));
+    if (response.statusCode != 200) {
+      throw Exception('Fehler beim Löschen aller Sparziele');
+    }
+  }
 }
